@@ -1,0 +1,5 @@
+services:
+  ilr_outreach_discount_manager:
+    class: '\Drupal\ilr_outreach_discount_api\IlrOutreachDiscountManager'
+    arguments: ['@salesforce.client']
+

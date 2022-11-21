@@ -1,0 +1,9 @@
+{
+  "name": "drupal/ilr_outreach_discount_api",
+  "description": "Custom Drupal module containing helpers for ILR Outreach discount codes.",
+  "type": "drupal-module",
+  "minimum-stability": "dev",
+  "require": {
+    "drupal/salesforce": "~5.0"
+  }
+}

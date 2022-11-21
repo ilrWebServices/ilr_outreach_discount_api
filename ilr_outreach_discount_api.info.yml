@@ -1,0 +1,7 @@
+name: 'ILR Outreach Discount API'
+type: module
+description: 'Provides an API for working with ILR Outreach discounts.'
+core_version_requirement: ^9 || ^10
+package: 'ILR'
+dependencies:
+  - salesforce:salesforce
