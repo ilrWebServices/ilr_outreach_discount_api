@@ -98,8 +98,10 @@ class IlrOutreachDiscountManager {
       $error = "Discount code '{$discount_code}' is currently ineligible.";
       return FALSE;
     }
-    // If there is a discount end date and it's in the past, not eligible.
-    elseif ($discount_code_object->field('Discount_End_Date__c') && $discount_end_date < $now_date) {
+    // If there is a discount end date and it's in the past, not eligible. We
+    // add a day to the end date since it is set to midnight (00:00) and all
+    // times on that day would be considered later.
+    elseif ($discount_code_object->field('Discount_End_Date__c') && $discount_end_date->add(new \DateInterval('P1D')) < $now_date) {
       $error = "Discount '{$discount_code}' is no longer eligible.";
       return FALSE;
     }
