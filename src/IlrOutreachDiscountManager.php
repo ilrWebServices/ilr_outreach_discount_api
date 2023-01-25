@@ -79,7 +79,8 @@ class IlrOutreachDiscountManager {
     }
 
     $discount_start_date = new \DateTime($discount_code_object->field('Discount_Start_Date__c'));
-    $discount_end_date = new \DateTime($discount_code_object->field('Discount_End_Date__c'));
+    $discount_end_date_orig = new \DateTime($discount_code_object->field('Discount_End_Date__c'));
+    $discount_end_date = clone $discount_end_date_orig;
     $now_date = new \DateTime('now');
     $rules_for_class = [];
 
@@ -125,6 +126,8 @@ class IlrOutreachDiscountManager {
     $eligible_discount->code = $discount_code;
     $eligible_discount->sfid = $discount_code_object->id();
     $eligible_discount->universal = $discount_code_object->field('Universal__c');
+    $eligible_discount->startDate = $discount_start_date;
+    $eligible_discount->endDate = $discount_end_date_orig;
 
     if ($discount_code_object->field('Discount_Type__c') === 'Individual_Percentage') {
       $eligible_discount->type = 'percentage';

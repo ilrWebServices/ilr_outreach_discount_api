@@ -46,6 +46,20 @@ class IlrOutreachDiscount {
   public $universal;
 
   /**
+   * The discount start date.
+   *
+   * @var string
+   */
+  public $startDate;
+
+  /**
+   * The discount end date.
+   *
+   * @var string
+   */
+  public $endDate;
+
+  /**
    * The Salesforce Class IDs the discount applies to.
    *
    * @var array
