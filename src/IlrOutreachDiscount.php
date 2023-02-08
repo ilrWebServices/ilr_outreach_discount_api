@@ -48,14 +48,14 @@ class IlrOutreachDiscount {
   /**
    * The discount start date.
    *
-   * @var string
+   * @var \Datetime
    */
   public $startDate;
 
   /**
    * The discount end date.
    *
-   * @var string
+   * @var \Datetime
    */
   public $endDate;
 
