@@ -2,6 +2,7 @@
 
 namespace Drupal\ilr_outreach_discount_api;
 
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\salesforce\Rest\RestClient;
 use Drupal\salesforce\SelectQuery;
 
@@ -15,13 +16,23 @@ class IlrOutreachDiscountManager {
   protected $client;
 
   /**
+   * The cache service.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected $cache;
+
+  /**
    * Constructs a new IlrOutreachDiscountManager object.
    *
    * @param \Drupal\salesforce\Rest\RestClient $client
    *   The Salesforce client.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_default
+   *   The cache service.
    */
-  public function __construct(RestClient $client) {
+  public function __construct(RestClient $client, CacheBackendInterface $cache_default) {
     $this->client = $client;
+    $this->cache = $cache_default;
   }
 
   /**
@@ -153,6 +164,37 @@ class IlrOutreachDiscountManager {
     }
 
     return $eligible_discount;
+  }
+
+  /**
+   * Get eligible class discounts directly from Salesforce, with caching.
+   *
+   * @param string $discount_code
+   *   The discount code.
+   * @param string|null $class_sf_id
+   *   The salesforce id of the class.
+   * @param string|null $error
+   *   An error message passed by reference.
+   * @param integer $cache_minutes
+   *   Number of minutes to cache the discount code.
+   *
+   * @return \Drupal\ilr_outreach_discount_api\IlrOutreachDiscount|FALSE
+   *   Discount info if class is eligible for this discount. FALSE if class is
+   *   not eligible.
+   */
+  public function getCachedEligibleDiscount(string $discount_code, string $class_sf_id = null, string &$error = NULL, int $cache_minutes = 15) {
+    $cache_id = $discount_code . '_' . $class_sf_id ?? 'all';
+    $cache_item = $this->cache->get($cache_id);
+
+    if ($cache_item) {
+      $data = $cache_item->data;
+    }
+    else {
+      $data = $this->getEligibleDiscount($discount_code, $class_sf_id, $error);
+      $this->cache->set($cache_id, $data, time() + $cache_minutes * 60);
+    }
+
+    return $data;
   }
 
 }
